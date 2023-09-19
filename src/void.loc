@@ -1,0 +1,24 @@
+<<void.loc>>
+
+welcome to nightmare run, a game made by cross the hedgehog(cross-sans/cross-sniper)
+
+this game is supposed to be part of gameVault, but i only have the repo as a part of a app on my phone(yes, i made a webview app on my phone)
+
+<p> bellow this is just some background text</p>
+:exit TL;DR start playing|main menu
+
+
+so, yeah, if you went through my repos, you know i dont make big projects, but anyhow
+
+this game is still a work-in-progress, as well as the runtime(neo runtime) and compiler(xbuild), they are a part of the repo this website is on, in case you wanna have a look at how they work
+
+<a href="build.js">xbuild</a>
+<a href="runtime.js">neo runtime</a>
+
+the source files for the game are included as well, under "src"
+
+
+if you find any bugs, report on my github, you will know if the bug occoured, because the game will alert you about it, and probably reset in the process
+
+
+:exit lets get playing|main menu
