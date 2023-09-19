@@ -3,3 +3,10 @@ function init(){
 	cash = 0
 	inv = []
 }
+
+function add(variable, ammount){
+	variable += ammount
+}
+function dec(variable, ammount){
+	variable -= ammount
+}
