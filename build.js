@@ -1,77 +1,94 @@
 const fs = require('fs');
-const path = require("path");
-SRC_DIR = "src/";
-files = [];
-contents = [];
+const path = require('path');
+const SRC_DIR = 'src';
+const CSS_DIR = 'css';
+const UI_DIR = 'ui';
 
-for (file of fs.readdirSync(SRC_DIR))
-    if (file.endsWith(".loc")) files.push(path.join(SRC_DIR, file));
+function getFilesRecursively(directory, fileExtension) {
+    const files = [];
+
+    function walk(dir) {
+        const filesInDir = fs.readdirSync(dir);
+        for (const file of filesInDir) {
+            const fullPath = path.join(dir, file);
+            if (fs.statSync(fullPath).isDirectory()) {
+                walk(fullPath); // Recursively walk through subdirectories
+            } else if (file.endsWith(fileExtension)) {
+                files.push(fullPath);
+            }
+        }
+    }
+
+    walk(directory);
+    return files;
+}
+
+function loadContentFromFile(file) {
+    return fs.readFileSync(file, 'utf8');
+}
 
 function parse(file) {
-    const fileContent = fs.readFileSync(file, 'utf8');
+    const fileContent = loadContentFromFile(file);
     const lines = fileContent.split('\n');
-    let content = ''; // Initialize content as an empty string
-    let isInComment = false; // Flag to track if currently inside a comment
+    let content = '';
+    let isInComment = false;
 
-    for (var line of lines) {
+    for (const line of lines) {
         if (line.startsWith(':uses ')) {
-            // You may need to adjust this logic based on your specific requirements
             const dependencyFile = path.join(SRC_DIR, line.replace(':uses ', ''));
-
             if (fs.existsSync(dependencyFile)) {
-                // Read and append the content of the dependency file
                 content += `<locscript>${parse(dependencyFile)}</locscript>`;
             } else {
                 console.error(`Dependency file not found: ${dependencyFile}`);
             }
         } else if (line.startsWith('<<') && line.endsWith('>>')) {
-            // Handle comments enclosed in << and >>
             content += `<!--${line.substring(2, line.length - 2)}-->`;
         } else if (line.startsWith('<<')) {
-            // Start of a comment
             content += `<!--${line.substring(2)}`;
             isInComment = true;
         } else if (line.endsWith('>>')) {
-            // End of a comment
             content += `${line.substring(0, line.length - 2)}-->`;
             isInComment = false;
         } else {
             line = line.replace(/:call (.*)/, "<locscript>$1()</locscript>");
             line = line.replace(/:exit (.*)\|(.*)/, "<button onclick=\"goto('$2')\">$1</button>");
-            // Add <br> tags after each line, but not inside comments
-            content += line + (isInComment ? '' : line.endsWith("</locscript>") ? "" : '<br>\n\n');
+            content += line + (isInComment ? '' : line.endsWith("</locscript>") ? '' : '<br>\n\n');
         }
     }
 
     return content;
 }
 
-for (const file of files) {
-    // Wrap the parsed content inside <loc> elements with IDs
-    // The runtime code can set them to visible whenever needed
-    // The runtime sets the location "void" as visible first, by default
-    contents.push(`<loc style='display:none;' id="${file.replace(SRC_DIR, '').replace('.loc','')}">${parse(file)}</loc>`);
-}
+const cssFiles = getFilesRecursively(CSS_DIR, '.css');
+const uiFiles = getFilesRecursively(UI_DIR, '.ui');
+const locFiles = getFilesRecursively(SRC_DIR, '.loc');
 
-html = `
+const cssContent = cssFiles.map(loadContentFromFile).join('\n');
+const uiContent = uiFiles.map(loadContentFromFile).join('\n');
+
+const locContents = locFiles.map(file => {
+    const content = parse(file);
+    const id = path.relative(SRC_DIR, file).replace('.loc', '');
+    return `<loc style="display:none;" id="${id}">${content}</loc>`;
+});
+
+const html = `
 <!DOCTYPE html>
 <html>
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>gameVault:nightmare run</title>
+    <style>
+        ${cssContent}
+    </style>
 </head>
 <body>
-    <style>
-        locscript{
-            display:none;
-        }
-    </style>
-    ${contents.join('\n')}
+    ${uiContent}
+    ${locContents.join('\n')}
     <script src="runtime.js"></script>
 </body>
 </html>
-`
+`;
 
-fs.writeFileSync("index.html", html);
+fs.writeFileSync('index.html', html);
