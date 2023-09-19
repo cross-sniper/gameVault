@@ -1,0 +1,16 @@
+<div hidden id="ui_hidden">
+	hp: $hp
+	cash: $cash
+	location: $CURRENT
+	inventory: $inv
+</div>
+<div id="ui"></div>
+
+<script>
+	ui_hidden = document.getElementById("ui_hidden")
+	ui = document.getElementById("ui")
+	setInterval(()=>{
+    	const regex = /\$([a-zA-Z_][a-zA-Z0-9_]*)/g;
+	    ui.innerHTML = ui_hidden.innerHTML.replace(regex, (_, variableName) => window[variableName] || '');
+	},1000)
+</script>

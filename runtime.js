@@ -7,7 +7,9 @@
   // Function to replace variables in content
   function replaceVariables(content) {
     const regex = /\$([a-zA-Z_][a-zA-Z0-9_]*)/g;
-    return content.replace(regex, (_, variableName) => window[variableName] || '');
+    content = content.replace(regex, (_, variableName) => window[variableName] || '')
+
+    return content;
   }
 
   // Function to navigate to a location
@@ -30,14 +32,15 @@
       }
     }
     // Execute the <script> code if it exists
-    const scripts = LOCATIONS[CURRENT].querySelectorAll("locscript");
-    if (scripts) {
-      for (script of scripts) {
-        try {
-          eval(script.textContent); // Execute the code within <script>
-        } catch (error) {
-          alert(`Error executing <script> in ${CURRENT}: ${error}`);
-        }
+    const scripts = LOCATIONS[id].querySelectorAll("locscript");
+
+    for (script of scripts) {
+      try {
+
+        console.log(`executing\n%c${script.textContent.replaceAll("<br>",'')}`, "color:rgba(200,200,200,0.9); font:bold;")
+        eval(script.textContent); // Execute the code within <script>
+      } catch (error) {
+        alert(`Error executing <locscript> in ${CURRENT}: ${error}`);
       }
     }
 

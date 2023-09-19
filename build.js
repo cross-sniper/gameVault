@@ -33,7 +33,7 @@ function parse(file) {
     let content = '';
     let isInComment = false;
 
-    for (const line of lines) {
+    for (var line of lines) {
         if (line.startsWith(':uses ')) {
             const dependencyFile = path.join(SRC_DIR, line.replace(':uses ', ''));
             if (fs.existsSync(dependencyFile)) {
