@@ -7,9 +7,7 @@
   // Function to replace variables in content
   function replaceVariables(content) {
     const regex = /\$([a-zA-Z_][a-zA-Z0-9_]*)/g;
-    content = content.replace(regex, (_, variableName) => window[variableName] || '');
-    content = content.replaceAll("<locscript>","<locscript hidden>")
-    return content
+    return content.replace(regex, (_, variableName) => window[variableName] || '');
   }
 
   // Function to navigate to a location

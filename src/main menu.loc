@@ -2,9 +2,6 @@
 
 :uses scripts/main.js
 
-<<calls init, from main.js>>
-
-:call init
 
 <<actual game content>>
 you wake up in a dark room, with no light, nor windows

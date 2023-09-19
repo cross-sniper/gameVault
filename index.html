@@ -2,32 +2,34 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>gameVault:nightmare run</title>
 </head>
 <body>
+    <style>
+        locscript{
+            display:none;
+        }
+    </style>
     <loc style='display:none;' id="main menu"><!--import scripts/main.js, and add the whole content of the file onto the compiled html--><br>
 
-<locscript style="display:none;"><br>
+<locscript><br>
 
-function init(){<br>
+inv = [<br>
 
-	window['inv'] = [<br>
+	"flashlight",<br>
 
-		"flashlight",<br>
+	"coins"<br>
 
-		"coins"<br>
+]<br>
 
-	]<br>
-
-}<br>
+<br>
 
 </locscript><br>
 
-<!--calls init, from main.js--><br>
-
-<locscript style="display:none;">init()</locscript><br>
+<br>
 
 <!--actual game content-->you wake up in a dark room, with no light, nor windows<br>
 
@@ -40,7 +42,21 @@ $inv<br>
 <br>
 
 </loc>
-<loc style='display:none;' id="void"><!--void.loc--><br>
+<loc style='display:none;' id="void"><!--void.loc--><locscript><br>
+
+inv = [<br>
+
+	"flashlight",<br>
+
+	"coins"<br>
+
+]<br>
+
+<br>
+
+</locscript><br>
+
+<br>
 
 welcome to nightmare run, a game made by cross the hedgehog(cross-sans/cross-sniper)<br>
 
@@ -85,6 +101,8 @@ if you find any bugs, report on my github, you will know if the bug occoured, be
 <br>
 
 <button onclick="goto('main menu')">lets get playing</button><br>
+
+<br>
 
 </loc>
     <script src="runtime.js"></script>

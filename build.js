@@ -20,7 +20,7 @@ function parse(file) {
 
             if (fs.existsSync(dependencyFile)) {
                 // Read and append the content of the dependency file
-                content += `<locscript style="display:none;">${parse(dependencyFile)}</locscript>`;
+                content += `<locscript>${parse(dependencyFile)}</locscript>`;
             } else {
                 console.error(`Dependency file not found: ${dependencyFile}`);
             }
@@ -36,7 +36,7 @@ function parse(file) {
             content += `${line.substring(0, line.length - 2)}-->`;
             isInComment = false;
         } else {
-            line = line.replace(/:call (.*)/, "<locscript style=\"display:none;\">$1()</locscript>");
+            line = line.replace(/:call (.*)/, "<locscript>$1()</locscript>");
             line = line.replace(/:exit (.*)\|(.*)/, "<button onclick=\"goto('$2')\">$1</button>");
             // Add <br> tags after each line, but not inside comments
             content += line + (isInComment ? '' : line.endsWith("</locscript>") ? "" : '<br>\n\n');
@@ -57,11 +57,17 @@ html = `
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>gameVault:nightmare run</title>
 </head>
 <body>
+    <style>
+        locscript{
+            display:none;
+        }
+    </style>
     ${contents.join('\n')}
     <script src="runtime.js"></script>
 </body>
